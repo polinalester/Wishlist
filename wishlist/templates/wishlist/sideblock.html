@@ -1,0 +1,31 @@
+<div class="block">
+    <a href="{% url 'wishlist:user_list' %}">
+        <button class="button is-dark is-outlined is-fullwidth">
+            All users
+        </button>
+    </a>
+</div>
+
+<div class="block">
+    <a href="{% url 'wishlist:home' %}">
+        <button class="button is-dark is-outlined is-fullwidth">
+            Home
+        </button>
+    </a>
+</div>
+
+<div class="block">
+    <a href="{% url 'wishlist:commitments' %}">
+        <button class="button is-dark is-outlined is-fullwidth">
+            Commitments
+        </button>
+    </a>
+</div>
+
+<div class="block">
+    <a href="{% url 'wishlist:user' user.profile.id %}">
+        <button class="button is-dark is-outlined is-fullwidth">
+            Profile
+        </button>
+    </a>
+</div>

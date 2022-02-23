@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="column">
+
+    <!--div class="block"-->
+    {% if usr.user.username != user.username %}
+    <h1 class="title is-1">
+        {{usr.user.username}}
+    </h1>
+    <!--/div-->
+    <div class="buttons has-addons">
+        <a href="{% url 'wishlist:follow' usr.user.profile.id %}">
+            <button class="button is-success">Follow</button>
+        </a>
+        <a href="{% url 'wishlist:unfollow' usr.user.profile.id %}">
+            <button class="button is-danger">Unfollow</button>
+        </a>
+    </div>
+    {% endif %}
+
+    <div class="content">
+        {% if usr.user.username != user.username %}
+        <h1 class="title is-1">
+            {{usr.user.username}} has wished for:
+        </h1>
+        {% else %}
+        <h1 class="title is-1">
+            My wishes:
+        </h1>
+        <a href="{% url 'wishlist:add_wish' %}">
+            <button class="button is-success">Add</button>
+        </a>
+        {% endif %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for wish in usr.user.wishes.all %}
+                <tr>
+                    <td>
+                        {% if wish.picture %}
+                        <div class="media">
+                            <figure class="image is-48x48">
+                              <img src="{{ wish.picture }}"
+                                   alt="Placeholder image">
+                            </figure>
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ wish.url }}" target="_blank">{{ wish.title}}</a>
+                        <span class="is-small has-text-grey-light">
+                            ({{ wish.created_at }})
+                        </span>
+                    </td>
+                    <td>{{ wish.description }}</td>
+                    <td>
+                        {% if wish.price %}
+                            {{ wish.price }}
+                        {% endif %}
+                    </td>
+                    {% if usr.user.username == user.username %}
+                    <td>
+                        <a href="{% url 'wishlist:edit_wish' wish.id%}">
+                        <button class="button is-success" disabled>Edit</button>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'wishlist:delete_wish' wish.id%}">
+                        <button class="button is-danger">Delete</button>
+                        </a>
+                    </td>
+                    {% else %}
+                        {% if wish.has_commitment %}
+                        <td>
+                            <a href="{% url 'wishlist:add_commitments' wish.id %}">
+                                <button class="button is-link" disabled>Buy</button>
+                            </a>
+                        </td>
+                        {% else %}
+                        <td>
+                            <a href="{% url 'wishlist:add_commitments' wish.id %}">
+                                <button class="button is-link">Buy</button>
+                            </a>
+                        </td>
+                        {% endif %}
+                    <td>
+                        <a href="">
+                            <button class="button is-warning" disabled>Sponsor</button>
+                        </a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div class="column is-one-third">
+	
+    {% include "wishlist/sideblock.html" %}    
+
+    {% if usr.follows.all %}
+    <div class="block">
+        <h3 class="title is-4">
+            {{usr.user.username}} follows:
+        </h3>
+        <div class="content">
+            <ul>
+            {% for following in usr.follows.all %}
+                <li>
+                    <a href="{% url 'wishlist:user' following.id %}">
+                        {{ following }}
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if usr.followed_by.all %}
+    <div class="block">
+        <h3 class="title is-4">
+            {{usr.user.username}} is followed by:
+        </h3>
+        <div class="content">
+            <ul>
+            {% for follower in usr.followed_by.all %}
+                <li>
+                    <a href="{% url 'wishlist:user' follower.id %}">
+                        {{ follower }}
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock content %}

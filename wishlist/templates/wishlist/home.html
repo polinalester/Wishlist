@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="column">
+    <div class="content">
+        <a href="{% url 'wishlist:add_wish' %}">
+            <button class="button is-success">Add</button>
+        </a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Author</th>
+                    <th>Price</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for wish in user.wishes.all %}
+                <tr>
+                    <td>
+                    	{% if wish.picture %}
+                        <div class="media">
+                            <figure class="image is-48x48">
+                              <img src="{{ wish.picture }}"
+                                   alt="Placeholder image">
+                            </figure>
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if wish.url %}
+                            <a href="{{ wish.url }}" target="_blank">{{ wish.title}}</a>
+                            <div class="is-small has-text-grey-light">
+                                ({{ wish.created_at }})
+                            </div>
+                        {% else %}
+                            {{ wish.title}}
+                            <div class="is-small has-text-grey-light">
+                                ({{ wish.created_at }})
+                            </div>
+                        {% endif %}
+                    </td>
+                    <td>{{ wish.description }}</td>
+                    <td>
+                    	<a href="{% url 'wishlist:user' user.profile.id %}">{{ user.username }}</a>
+                    </td>
+                    <td>
+                    {% if wish.price %}
+		                {{ wish.price }}
+                    {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'wishlist:edit_wish' wish.id%}">
+                        <button class="button is-success" disabled>Edit</button>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'wishlist:delete_wish' wish.id%}">
+                        <button class="button is-danger">Delete</button>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+
+                {% for profile in user.profile.follows.all %}
+	                {% for wish in profile.user.wishes.all %}
+	                <tr>
+	                    <td>
+	                    	{% if wish.picture %}
+	                        <div class="media">
+	                            <figure class="image is-48x48">
+	                              <img src="{{ wish.picture }}"
+	                                   alt="Placeholder image">
+	                            </figure>
+	                        </div>
+	                        {% endif %}
+	                    </td>
+	                    <td>
+                            {% if wish.url %}
+    	                        <a href="{{ wish.url }}" target="_blank">{{ wish.title}}</a>
+    	                        <div class="is-small has-text-grey-light">
+    	                            ({{ wish.created_at }})
+    	                        </div>
+                            {% else %}
+                                <a>{{ wish.title}}</a>
+                                <div class="is-small has-text-grey-light">
+                                    ({{ wish.created_at }})
+                                </div>
+                            {% endif %}
+	                    </td>
+	                    <td>{{ wish.description }}</td>
+	                    <td>
+	                    	<a href="{% url 'wishlist:user' profile.id %}">{{ profile.user.username }}</a>
+	                    </td>
+	                    <td>
+	                    {% if wish.price %}
+			                {{ wish.price }}
+	                    {% endif %}
+	                    </td>
+                        {% if wish.has_commitment %}
+                        <td>
+                            <a href="{% url 'wishlist:add_commitments' wish.id %}">
+                                <button class="button is-link" disabled>Buy</button>
+                            </a>
+                        </td>
+                        {% else %}
+                        <td>
+                            <a href="{% url 'wishlist:add_commitments' wish.id %}">
+                                <button class="button is-link">Buy</button>
+                            </a>
+                        </td>
+                        {% endif %}
+                        <td>
+                            <a href="">
+                                <button class="button is-warning" disabled>Sponsor</button>
+                            </a>
+                        </td>
+	                </tr>
+	                {% endfor %}
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<div class="column is-one-third">
+    {% include "wishlist/sideblock.html" %}    
+</div>
+
+
+{% endblock content %}

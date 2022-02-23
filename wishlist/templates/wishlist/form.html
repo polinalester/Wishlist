@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form action="/add/" method="post">
+	<div class="container">
+		{% csrf_token %}
+		<div class="field">
+			<label class="label">Title</label>
+			<div class="control">
+			    {{ form.title }}
+			</div>
+		</div>
+
+		<div class="field">
+			<label class="label">Description</label>
+			<div class="control">
+				{{ form.description }}
+			</div>
+		</div>
+
+		<div class="field">
+			<label class="label">URL</label>
+			<div class="control">
+				{{ form.url }}
+			</div>
+		</div>
+
+		<div class="field">
+			<label class="label">Picture</label>
+			<div class="control">
+				{{ form.picture }}
+			</div>
+		</div>
+
+		<div class="field">
+			<label class="label">Price</label>
+			<div class="control">
+				{{ form.price }}
+			</div>
+		</div>
+
+		<input type="submit" value="Add">
+	</div>
+</form>
+{% endblock content %}

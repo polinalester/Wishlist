@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="column">
+    <div class="content">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Author</th>
+                    <th>Price</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for com in user.commitments.all %}
+                <tr>
+                    <td>
+                    	{% if com.wish.picture %}
+                        <div class="media">
+                            <figure class="image is-48x48">
+                              <img src="{{ wish.picture }}"
+                                   alt="Placeholder image">
+                            </figure>
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if com.wish.url %}
+                            <a href="{{ com.wish.url }}" target="_blank">{{ com.wish.title}}</a>
+                            <div class="is-small has-text-grey-light">
+                                ({{ com.wish.created_at }})
+                            </div>
+                        {% else %}
+                            {{ com.wish.title}}
+                            <div class="is-small has-text-grey-light">
+                                ({{ com.wish.created_at }})
+                            </div>
+                        {% endif %}
+                    </td>
+                    <td>{{ com.wish.description }}</td>
+                    <td>
+                    	<a href="{% url 'wishlist:user' user.profile.id %}">{{ com.wish.user.username }}</a>
+                    </td>
+                    <td>
+                    {% if com.wish.price %}
+		                {{ com.wish.price }}
+                    {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'wishlist:change_wish_status' com.wish.id%}">
+                        <button class="button is-danger">Cancel</button>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<div class="column is-one-third">
+    {% include "wishlist/sideblock.html" %}    
+</div>
+
+
+{% endblock content %}
